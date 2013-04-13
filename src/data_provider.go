@@ -18,7 +18,15 @@ func main() {
 		os.Exit(1)
 	}
 	reader := bufio.NewReader(conn)
-	lw := logger.NewLogWriter()
+	logfile, err :=
+		os.OpenFile("/home/kalkin/projects/work/btc-trade/data/btccharts-data.log", os.O_APPEND|os.O_RDWR,
+			0666)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	defer logfile.Close()
+	lw := logger.NewLogWriter(logfile)
 	for true {
 		line, _ := reader.ReadString('\n')
 		lw.Write(line)
