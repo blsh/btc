@@ -13,7 +13,22 @@ type Message struct {
 	Symbol, Volume, Id, Timestamp, Price string
 }
 
-/*func (m Message) GetCSV() string interface {*/
+// This map hardcodes a trader string to a float:
+var TraderIdMap = map[string]float32{
+	"bit2cILS":    0.01,
+	"bitfloorUSD": 0.02,
+	"bitstampUSD": 0.03,
+	"btcdeEUR":    0.04,
+	"btceRUR":     0.05,
+	"btceUSD":     0.06,
+	"btcnCNY":     0.07,
+	"mtgoxEUR":    0.08,
+	"mtgoxPLN":    0.09,
+	"mtgoxUSD":    0.10,
+	"rippleXRP":   0.11,
+	"virwoxSLL":   0.12,
+}
+
 
 /*}*/
 
