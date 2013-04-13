@@ -1,3 +1,5 @@
+// Package provides functions and structs for working with data from telnet
+// btccharts.com
 package btccharts
 
 import "regexp"
