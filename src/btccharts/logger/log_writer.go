@@ -1,28 +1,26 @@
 package logger
 
 import (
-	"fmt"
 	"io"
-	"os"
 )
 
 type LogWriter struct {
-	path string
-	c    chan string
+	out io.Writer
+	c   chan string
 }
 
 func (lw LogWriter) Write(msg string) {
 	lw.c <- msg
 }
 
-func NewLogWriter() LogWriter {
-	lw := LogWriter{path: "./data/test.log", c: make(chan string)}
-	go lw.run(os.Stdout)
+func NewLogWriter(out io.Writer) LogWriter {
+	lw := LogWriter{out, make(chan string)}
+	go lw.run()
 	return lw
 }
 
-func (lw LogWriter) run(out io.Writer) {
+func (lw LogWriter) run() {
 	for line := range lw.c {
-		fmt.Fprint(out, line)
+		io.WriteString(lw.out, line)
 	}
 }
