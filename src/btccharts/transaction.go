@@ -29,7 +29,12 @@ var TraderIdMap = map[string]float32{
 	"virwoxSLL":   0.12,
 }
 
+/*type Row struct {*/
+/*Symbol, Volume, Id, Currency, Price string*/
+/*}*/
 
+/*func (m Message) String() string interface {*/
+/*return */
 /*}*/
 
 /*const input = "{\"volume\": 4.0, \"timestamp\": 1365812301, \"price\": 114.0, \"symbol\": \"virtexCAD\", \"id\": 21913359}"*/
@@ -37,11 +42,7 @@ var TraderIdMap = map[string]float32{
 // Parses a string from btccharts to json. We have to do some hacky reggex to
 // make all values strings (fuck float64) before parsing it with std json go lib
 func GetMessage(data string) Message {
-	var tmp string
-	tmp = regexp.MustCompile(`: `).ReplaceAllString(data, ": \"")
-	tmp = regexp.MustCompile(`[,]`).ReplaceAllString(tmp, "\",")
-	tmp = regexp.MustCompile(`[}]`).ReplaceAllString(tmp, "\"}")
-	tmp = regexp.MustCompile(`["]{2}`).ReplaceAllString(tmp, "\"")
+	tmp := ConvertAllJsonValuesToString(data)
 	log.Println(tmp)
 	dec := json.NewDecoder(strings.NewReader(tmp))
 	var m Message
@@ -54,4 +55,13 @@ func GetMessage(data string) Message {
 	}
 
 	return m
+}
+
+// Converts all json values to string to avoid handling with floats
+func ConvertAllJsonValuesToString(data string) string {
+	tmp := regexp.MustCompile(`: `).ReplaceAllString(data, ": \"")
+	tmp = regexp.MustCompile(`[,]`).ReplaceAllString(tmp, "\",")
+	tmp = regexp.MustCompile(`[}]`).ReplaceAllString(tmp, "\"}")
+	tmp = regexp.MustCompile(`["]{2}`).ReplaceAllString(tmp, "\"")
+	return tmp
 }
