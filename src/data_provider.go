@@ -4,6 +4,7 @@ package main
 
 import (
 	"btccharts"
+	"btccharts/logger"
 	"bufio"
 	"fmt"
 	"net"
@@ -17,11 +18,14 @@ func main() {
 		os.Exit(1)
 	}
 	reader := bufio.NewReader(conn)
-
+	lw := logger.NewLogWriter()
 	for true {
 		line, _ := reader.ReadString('\n')
+		lw.Write(line)
 		m := btccharts.GetMessage(line)
-		fmt.Printf("%s\n", m)
+		if m.Symbol == "mtgoxUSD" {
+			fmt.Printf("%s,%s\n", m, m.Price)
+		}
 
 	}
 
