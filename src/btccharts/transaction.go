@@ -28,6 +28,7 @@ var TraderIdMap = map[string]float64{
 	"mtgoxUSD":    0.10,
 	"rippleXRP":   0.11,
 	"virwoxSLL":   0.12,
+	"virtexCAD":   0.13,
 }
 
 /*type Row struct {*/
