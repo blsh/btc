@@ -6,6 +6,7 @@ import "regexp"
 import "strings"
 import "io"
 import "log"
+import "fmt"
 import "encoding/json"
 
 // Represents the a json messsage row from btccharts
@@ -14,7 +15,7 @@ type Message struct {
 }
 
 // This map hardcodes a trader string to a float:
-var TraderIdMap = map[string]float32{
+var TraderIdMap = map[string]float64{
 	"bit2cILS":    0.01,
 	"bitfloorUSD": 0.02,
 	"bitstampUSD": 0.03,
@@ -33,9 +34,13 @@ var TraderIdMap = map[string]float32{
 /*Symbol, Volume, Id, Currency, Price string*/
 /*}*/
 
-/*func (m Message) String() string interface {*/
-/*return */
-/*}*/
+func (m Message) GetTraderId() float64 {
+	return TraderIdMap[m.Symbol]
+}
+
+func (m Message) String() string {
+	return fmt.Sprintf("%g,%s,%s,%s", m.GetTraderId(), m.Timestamp, m.Volume, m.Price)
+}
 
 /*const input = "{\"volume\": 4.0, \"timestamp\": 1365812301, \"price\": 114.0, \"symbol\": \"virtexCAD\", \"id\": 21913359}"*/
 
@@ -43,7 +48,6 @@ var TraderIdMap = map[string]float32{
 // make all values strings (fuck float64) before parsing it with std json go lib
 func GetMessage(data string) Message {
 	tmp := ConvertAllJsonValuesToString(data)
-	log.Println(tmp)
 	dec := json.NewDecoder(strings.NewReader(tmp))
 	var m Message
 	for {

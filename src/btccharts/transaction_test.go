@@ -1,6 +1,7 @@
 package btccharts
 
 import "testing"
+import "fmt"
 
 // Example json input row from btccharts
 const input = `{"volume": 4.0, "timestamp": 1365812301, "price": 114.0, "symbol": "mtgoxUSD", "id": 21913359}`
@@ -15,6 +16,20 @@ func TestGetMessage(t *testing.T) {
 func TestConvertAllJsonValuesToString(t *testing.T) {
 	const expected = `{"volume": "4.0", "timestamp": "1365812301", "price": "114.0", "symbol": "mtgoxUSD", "id": "21913359"}`
 	result := ConvertAllJsonValuesToString(input)
+	checkStrings(expected, result, t)
+}
+
+func TestGetTraderId(t *testing.T) {
+	expected := 0.10
+	result := GetMessage(input).GetTraderId()
+	if expected != result {
+		t.Errorf("Expected: %d\nResult: %d\n", expected, result)
+	}
+}
+
+func TestMessageString(t *testing.T) {
+	expected := "0.1,1365812301,4.0,114.0"
+	result := fmt.Sprintf("%s", GetMessage(input))
 	checkStrings(expected, result, t)
 }
 
