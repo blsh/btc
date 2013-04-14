@@ -40,6 +40,14 @@ func Sub(x, y *big.Rat) *big.Rat {
 	return NewRat().Sub(x, y)
 }
 
+func RatFromString(s string) *big.Rat {
+	rat, ok := NewRat().SetString(s)
+	if !ok {
+		panic(ok)
+	}
+	return rat
+}
+
 // Some magic constants! Carefull! Here shall be dragons!
 // All NormalizeFoo() functions have constants for fooMin & fooMax. foo is
 // reduced to a value between 0 and 1

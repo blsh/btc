@@ -86,6 +86,12 @@ func TestNormalizeTimestamp(t *testing.T) {
 	checkRats(expected, result, t)
 }
 
+func TestRatFromString(t *testing.T) {
+	expected := big.NewRat(75, 80)
+	result := RatFromString("0.9375")
+	checkRats(expected, result, t)
+}
+
 func checkRats(expected *big.Rat, result *big.Rat, t *testing.T) {
 	if expected.Cmp(result) != 0 {
 		t.Errorf("Expected: %s\nResult: %s\n", expected, result)
