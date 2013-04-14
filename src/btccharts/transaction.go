@@ -31,19 +31,15 @@ var TraderIdMap = map[string]float64{
 	"virtexCAD":   0.13,
 }
 
-/*type Row struct {*/
-/*Symbol, Volume, Id, Currency, Price string*/
-/*}*/
-
+// The traderId hardcoded in TraderIdMap
 func (m Message) GetTraderId() float64 {
 	return TraderIdMap[m.Symbol]
 }
 
+// Returns the normalized string for neuroph
 func (m Message) String() string {
 	return fmt.Sprintf("%g,%s,%s,%s", m.GetTraderId(), m.Timestamp, m.Volume, m.Price)
 }
-
-/*const input = "{\"volume\": 4.0, \"timestamp\": 1365812301, \"price\": 114.0, \"symbol\": \"virtexCAD\", \"id\": 21913359}"*/
 
 // Parses a string from btccharts to json. We have to do some hacky reggex to
 // make all values strings (fuck float64) before parsing it with std json go lib
