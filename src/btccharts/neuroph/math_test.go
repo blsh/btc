@@ -3,6 +3,26 @@ package neuroph
 import "testing"
 import "math/big"
 
+// Contains few example of price changes with expected normalization results
+// Example price is going up 1CUR
+// {
+//		"priceOld": big.NewRat(100, 1),
+//		"priceNew": big.NewRat(101, 1),
+//		"output1":  big.NewRat(1, 50),
+//		"output2":  big.NewRat(0, 1),
+//		"output3":  big.NewRat(0, 1),
+//	}
+var PriceChangesMap = [][]*big.Rat{
+	// Price is going up 1CUR
+	{big.NewRat(100, 1), big.NewRat(101, 1), big.NewRat(1, 50), big.NewRat(0, 1), big.NewRat(0, 1)},
+	// Price stayes same
+	{big.NewRat(100, 1), big.NewRat(100, 1), big.NewRat(0, 1), big.NewRat(1, 1), big.NewRat(0, 1)},
+	// Price is going down 1CUR
+	{big.NewRat(101, 1), big.NewRat(100, 1), big.NewRat(0, 1), big.NewRat(0, 1), big.NewRat(1, 50)},
+}
+
+var Normalized
+
 func TestAdd(t *testing.T) {
 	x := big.NewRat(24, 1)
 	y := big.NewRat(6, 1)
