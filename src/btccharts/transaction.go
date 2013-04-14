@@ -15,24 +15,24 @@ type Message struct {
 }
 
 // This map hardcodes a trader string to a float:
-var TraderIdMap = map[string]float64{
-	"bit2cILS":    0.01,
-	"bitfloorUSD": 0.02,
-	"bitstampUSD": 0.03,
-	"btcdeEUR":    0.04,
-	"btceRUR":     0.05,
-	"btceUSD":     0.06,
-	"btcnCNY":     0.07,
-	"mtgoxEUR":    0.08,
-	"mtgoxPLN":    0.09,
-	"mtgoxUSD":    0.10,
-	"rippleXRP":   0.11,
-	"virwoxSLL":   0.12,
-	"virtexCAD":   0.13,
+var TraderIdMap = map[string]int64{
+	"bit2cILS":    1,
+	"bitfloorUSD": 2,
+	"bitstampUSD": 3,
+	"btcdeEUR":    4,
+	"btceRUR":     5,
+	"btceUSD":     6,
+	"btcnCNY":     7,
+	"mtgoxEUR":    8,
+	"mtgoxPLN":    9,
+	"mtgoxUSD":    10,
+	"rippleXRP":   11,
+	"virwoxSLL":   12,
+	"virtexCAD":   13,
 }
 
 // The traderId hardcoded in TraderIdMap
-func (m Message) GetTraderId() float64 {
+func (m Message) GetTraderId() int64 {
 	return TraderIdMap[m.Symbol]
 }
 
