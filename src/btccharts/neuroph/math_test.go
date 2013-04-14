@@ -21,7 +21,7 @@ var PriceChangesMap = [][]*big.Rat{
 	{big.NewRat(101, 1), big.NewRat(100, 1), big.NewRat(0, 1), big.NewRat(0, 1), big.NewRat(1, 50)},
 }
 
-var Normalized
+/*var Normalized*/
 
 func TestAdd(t *testing.T) {
 	x := big.NewRat(24, 1)
@@ -106,11 +106,29 @@ func TestNormalizeTimestamp(t *testing.T) {
 	checkRats(expected, result, t)
 }
 
-func TestRatFromString(t *testing.T) {
-	expected := big.NewRat(75, 80)
-	result := RatFromString("0.9375")
-	checkRats(expected, result, t)
+func TestNormalizePriceDiff(t *testing.T) {
+	/*diff := big.NewRat(1, 1)      // The difference between to prices is 1 CUR*f()*/
+	/*expected := big.NewRat(1, 50) // (1 - 0)/(50-0) * (1 - 0) + 0*/
+	/*result := NormalizePriceDiff(diff)*/
+	/*checkRats(expected, result, t)*/
 }
+
+func TestNormalizeOutputs(t *testing.T) {
+	for _, data := range PriceChangesMap {
+		output1, output2, output3 := NormalizeOutputs(data[0], data[1])
+		expectedArr := data[2:4]
+		resultArr := []*big.Rat{output1, output2, output3}
+		for k, result := range resultArr {
+			expected := expectedArr[k]
+			checkRats(expected, result, t)
+		}
+
+	}
+}
+
+/*func TestRatFromString(t *testing.T) {*/
+/*checkRats(expected, result, t)*/
+/*}*/
 
 func checkRats(expected *big.Rat, result *big.Rat, t *testing.T) {
 	if expected.Cmp(result) != 0 {

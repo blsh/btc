@@ -8,6 +8,19 @@ import "btccharts/neuroph"
 // Example json input row from btccharts
 const input = `{"volume": 4.0, "timestamp": 1365812301, "price": 114.0, "symbol": "mtgoxUSD", "id": 21913359}`
 
+// Example strings like you get from the telnet bitcoincharts stream
+var TradeStringsMap = []string{
+	`{"volume": 4.0, "timestamp": 1365812301, "price": 114.0, "symbol": "mtgoxUSD", "id": 21913359}`,
+	`{"volume": 3.2, "timestamp": 1365812329, "price": 115.0, "symbol": "btceUSD", "id": 21913360}`,
+	`{"volume": 2.4, "timestamp": 1365812421, "price": 114.5, "symbol": "mtgoxUSD", "id": 21913361}`,
+}
+
+/*expected := []*big.Rat{symbol, price, volume, timestamp}*/
+
+var ExpectedNeurophResults = []string{
+	`0.10,0,000113999998,0`,
+}
+
 func TestGetMessage(t *testing.T) {
 	m := GetMessage(input)
 	if m.Volume != "4.0" || m.Timestamp != "1365812301" || m.Price != "114.0" || m.Symbol != "mtgoxUSD" || m.Id != "21913359" {
@@ -55,15 +68,12 @@ func TestNormalize(t *testing.T) {
 	// 1/1M $CURRENCY
 	priceMax := big.NewRat(1000000, 1)
 	priceMin := big.NewRat(1, 1000000)
-
 	symbol := big.NewRat(1, 10)
 	price := neuroph.MaxMin(priceMax, priceMin, big.NewRat(114, 1))
 	volume := neuroph.MaxMin(volumeMax, volumeMin, big.NewRat(4, 1))
 	timestamp := neuroph.MaxMin(timestampMax, timestampMin, big.NewRat(1365812301, 1))
-	output1 := big.NewRat(1, 1)
-	output2 := big.NewRat(0, 1)
 
-	expected := []*big.Rat{symbol, price, volume, timestamp, output1, output2}
+	expected := []*big.Rat{symbol, price, volume, timestamp}
 	result := GetMessage(input).Normalize()
 	for k, v := range expected {
 		if result[k].Cmp(v) != 0 {
@@ -86,4 +96,11 @@ func TestTraderIdMap(t *testing.T) {
 			t.Errorf("Trader %s has id %i out of limit 1-99", k, v)
 		}
 	}
+}
+
+// This is one of the most important test. It takes the strings from TradeStringsMap
+// and tries to normalize it for neuroph. It checks the results with
+// ExpectedNeurophResults
+func TestMessageToNeuroph(t *testing.T) {
+
 }

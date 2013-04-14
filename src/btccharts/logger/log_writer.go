@@ -1,5 +1,7 @@
 package logger
 
+import "math/big"
+
 import (
 	"io"
 )
@@ -23,4 +25,14 @@ func (lw LogWriter) run() {
 	for line := range lw.c {
 		io.WriteString(lw.out, line)
 	}
+}
+
+type NeurophWriter struct {
+	lw        LogWriter
+	lastPrice *big.Rat
+}
+
+func NewNeurophWriter(out io.Writer) NeurophWriter {
+	nw := NeurophWriter{LogWriter{out, make(chan string)}, big.NewRat(-1, 1)}
+	return nw
 }

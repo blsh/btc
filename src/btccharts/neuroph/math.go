@@ -82,3 +82,28 @@ func NormalizeTimestamp(timestamp *big.Rat) *big.Rat {
 	timestampMin := big.NewRat(1116828426, 1)
 	return MaxMin(timestampMax, timestampMin, timestamp)
 }
+
+// We assume that a fluctuation between two trades will be max 50 $CURRENCY
+func NormalizePriceDiff(price *big.Rat) *big.Rat {
+	/*diffMax := big.NewRat(50, 1)*/
+	diffMin := big.NewRat(0, 1)
+	return diffMin
+}
+
+// This function is used to generate 3 outputs from a price change
+// This function returns 3 Rats (output1, output2, output3). Each Rat has a
+// value between 0 and 1. Only one Rat of all has a value > 0
+// If price is going up, then output1 will be >0, same price output 2 == 1,
+// price down output3 >0
+func NormalizeOutputs(oldPrice, newPrice *big.Rat) (*big.Rat, *big.Rat, *big.Rat) {
+	cmpResult := oldPrice.Cmp(newPrice) // Let's first find
+	switch cmpResult {
+	case -1:
+		return big.NewRat(0, 1), big.NewRat(1, 1), big.NewRat(0, 1)
+	case 0:
+		return big.NewRat(0, 1), big.NewRat(1, 1), big.NewRat(0, 1)
+	case 1:
+		return big.NewRat(0, 1), big.NewRat(1, 1), big.NewRat(0, 1)
+	}
+	return big.NewRat(0, 1), big.NewRat(1, 1), big.NewRat(0, 1)
+}
