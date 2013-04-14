@@ -2,6 +2,6 @@ package neuroph
 
 import "math/big"
 
-type Normalizable interface {
+type NeurophRecord interface {
 	Normalize() []big.Rat
 }
