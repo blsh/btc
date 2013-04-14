@@ -7,7 +7,9 @@ import "strings"
 import "io"
 import "log"
 import "fmt"
+import "btccharts/neuroph"
 import "encoding/json"
+import "math/big"
 
 // Represents the a json messsage row from btccharts
 type Message struct {
@@ -56,6 +58,16 @@ func GetMessage(data string) Message {
 	}
 
 	return m
+}
+
+func (m Message) Normalize() []*big.Rat {
+	symbol := neuroph.NormalizeSymbol(big.NewRat(m.GetTraderId(), 100))
+	price := neuroph.NormalizePrice(neuroph.RatFromString(m.Price))
+	volume := neuroph.NormalizeVolume(neuroph.RatFromString(m.Volume))
+	timestamp := neuroph.NormalizeTimestamp(neuroph.RatFromString(m.Timestamp))
+	output1 := neuroph.NormalizePrice(neuroph.NewRat())
+	result := []*big.Rat{symbol, price, volume, timestamp, output1, output1}
+	return result
 }
 
 // Converts all json values to string to avoid handling with floats

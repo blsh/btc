@@ -8,10 +8,7 @@ func TestAdd(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(30, 1)
 	result := Add(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -20,10 +17,7 @@ func TestDiv(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(4, 1)
 	result := Div(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -32,10 +26,7 @@ func TestMul(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(24, 1)
 	result := Mul(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -44,10 +35,7 @@ func TestSub(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(18, 1)
 	result := Sub(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -57,6 +45,54 @@ func TestMaxMin(t *testing.T) {
 	maxA := big.NewRat(10, 1)
 	expected := big.NewRat(2, 9)
 	result := MaxMin(maxA, minA, a)
+	checkRats(expected, result, t)
+}
+
+// Check our Magic!
+func TestNormalizePrice(t *testing.T) {
+	price := big.NewRat(114, 1)
+	priceMax := big.NewRat(1000000, 1)
+	priceMin := big.NewRat(1, 1000000)
+	expected := MaxMin(priceMax, priceMin, price)
+	result := NormalizePrice(price)
+
+	checkRats(expected, result, t)
+}
+
+func TestNormalizeSymbol(t *testing.T) {
+	symbolMax := big.NewRat(1, 1)
+	symbolMin := big.NewRat(0, 1)
+	symbol := big.NewRat(10, 100)
+	expected := MaxMin(symbolMax, symbolMin, symbol)
+	result := NormalizeSymbol(symbol)
+	checkRats(expected, result, t)
+}
+
+func TestNormalizeVolume(t *testing.T) {
+	volumeMax := big.NewRat(1000000, 1)
+	volumeMin := big.NewRat(1, 1000000)
+	volume := big.NewRat(4, 1)
+	expected := MaxMin(volumeMax, volumeMin, volume)
+	result := NormalizeVolume(volume)
+	checkRats(expected, result, t)
+}
+
+func TestNormalizeTimestamp(t *testing.T) {
+	timestampMax := big.NewRat(2284438026, 1)
+	timestampMin := big.NewRat(1116828426, 1)
+	timestamp := big.NewRat(1365812301, 1)
+	expected := MaxMin(timestampMax, timestampMin, timestamp)
+	result := NormalizeTimestamp(timestamp)
+	checkRats(expected, result, t)
+}
+
+func TestRatFromString(t *testing.T) {
+	expected := big.NewRat(75, 80)
+	result := RatFromString("0.9375")
+	checkRats(expected, result, t)
+}
+
+func checkRats(expected *big.Rat, result *big.Rat, t *testing.T) {
 	if expected.Cmp(result) != 0 {
 		t.Errorf("Expected: %s\nResult: %s\n", expected, result)
 	}
