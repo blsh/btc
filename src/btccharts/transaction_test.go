@@ -2,6 +2,9 @@ package btccharts
 
 import "testing"
 
+import "math/big"
+import "btccharts/neuroph"
+
 // Example json input row from btccharts
 const input = `{"volume": 4.0, "timestamp": 1365812301, "price": 114.0, "symbol": "mtgoxUSD", "id": 21913359}`
 
@@ -32,6 +35,42 @@ func TestMessageString(t *testing.T) {
 	/*expected := "0.1,1365812301,4.0,114.0"*/
 	/*result := fmt.Sprintf("%s", GetMessage(input))*/
 	/*checkStrings(expected, result, t)*/
+}
+
+func TestNormalize(t *testing.T) {
+	// Some magic constants! Carefull! Here shall be dragons!
+	// 
+	// We do here the assumption that there will be no trade for more than 1M
+	// and less 1/1M bitcoin
+	volumeMax := big.NewRat(1000000, 1)
+	volumeMin := big.NewRat(1, 1000000)
+
+	// We do the assumption that first trade was made on some sunny day in may
+	// 2005 and the last will be in may 2042 HAHAHA >:D
+	timestampMax := big.NewRat(2284438026, 1)
+	timestampMin := big.NewRat(1116828426, 1)
+
+	// We predict that at the high point of the hype a BTC will be worth
+	// 1M $CURRENCY (RUB perhaps? :D) and the lowest point will be at 
+	// 1/1M $CURRENCY
+	priceMax := big.NewRat(1000000, 1)
+	priceMin := big.NewRat(1, 1000000)
+
+	symbol := big.NewRat(1, 10)
+	price := neuroph.MaxMin(priceMax, priceMin, big.NewRat(114, 1))
+	volume := neuroph.MaxMin(volumeMax, volumeMin, big.NewRat(4, 1))
+	timestamp := neuroph.MaxMin(timestampMax, timestampMin, big.NewRat(1365812301, 1))
+	output1 := big.NewRat(1, 1)
+	output2 := big.NewRat(0, 1)
+
+	expected := []*big.Rat{symbol, price, volume, timestamp, output1, output2}
+	result := GetMessage(input).Normalize()
+	for k, v := range expected {
+		if result[k].Cmp(v) != 0 {
+			t.Errorf("Expected: %s\nResult: %s\n", v, result[k])
+		}
+	}
+
 }
 
 func checkStrings(expected, result string, t *testing.T) {
