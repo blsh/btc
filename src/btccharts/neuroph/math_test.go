@@ -8,10 +8,7 @@ func TestAdd(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(30, 1)
 	result := Add(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -20,10 +17,7 @@ func TestDiv(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(4, 1)
 	result := Div(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -32,10 +26,7 @@ func TestMul(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(24, 1)
 	result := Mul(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -44,10 +35,7 @@ func TestSub(t *testing.T) {
 	y := big.NewRat(6, 1)
 	z := big.NewRat(18, 1)
 	result := Sub(x, y)
-
-	if z.Cmp(result) != 0 {
-		t.Errorf("Expected: %s\nResult: %s\n", z, result)
-	}
+	checkRats(z, result, t)
 
 }
 
@@ -57,6 +45,10 @@ func TestMaxMin(t *testing.T) {
 	maxA := big.NewRat(10, 1)
 	expected := big.NewRat(2, 9)
 	result := MaxMin(maxA, minA, a)
+	checkRats(expected, result, t)
+}
+
+func checkRats(expected *big.Rat, result *big.Rat, t *testing.T) {
 	if expected.Cmp(result) != 0 {
 		t.Errorf("Expected: %s\nResult: %s\n", expected, result)
 	}
